@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name='mobile-web-app-capable' content='yes'/>
+    <meta name='apple-mobile-web-app-capable' content='yes'/>
+   
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <style type='text/css'>
+    @keyframes navbarToleft{
+      from {
+        transform:translateX( 0vw);}
+        to{   
+        transform:translateX(-150vw);}
+            
+    }
+    @keyframes navbarToRight {
+      from{
+        transform:translateX(0vw);
+        
+      }
+      to{
+        transform:translateX(150vw);
+        
+      }
+    }
+     @keyframes navBarBtnLeft {
+        from {
+          transform: rotate(-180deg);
+          
+        }
+        to {
+           
+           transform:rotate(0deg);
+        }
+      }
+      @keyframes navBarBtnRight {
+        from {
+          transform: rotate(-180deg);
+          
+        }
+        to {
+           
+           transform:rotate(0deg);
+        }
+      }
+    .main{
+      box-sizing:border-box;
+    }
+    .collectionNameDiv:active{
+      border:1px black solid;
+      transition: all 0.9s linear;
+
+    }
+    .ordersInfo{
+      display:flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .collectionNameDiv:hover{
+      opacity: 0.5;
+      border:1px #e7e7e7 solid;
+      transition: opacity .9s, border .9s linear;
+    }
+     .navlinkDiv:hover{
+       background-color: floralwhite;
+       color:blueviolet;
+       transition: background-color .9s, color .9s;
+     } 
+     .active{
+       background-color: thistle;
+       color: blueviolet;
+       border: darkblue 1px solid;
+       text-decoration: none;
+       
+       
+       
+     }
+    
+     .navlinkDiv:active{
+        font-size: 7vh;
+        line-height: 8vh;
+        border-width: 5px;
+
+      }
+     .homePage{ display: grid;
+grid-template-columns: 1fr;
+grid-template-rows: auto;
+
+     }
+ .ordersDiv{
+   min-height: 100vh;
+   margin-top: 20vh;
+   display: grid;
+   grid-template-columns: 1fr;
+   grid-template-rows: 1fr auto;
+ } 
+ .filterDiv{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+ }
+ .filterDiv,.odersNameSelect{
+   font-size: .8em;
+   
+ } 
+.filterDiv p{
+  font-size:.7em;
+  text-align:center;
+  margin:0px 2vw 0px 0px;
+  
+}
+ .img{
+   width:100%;
+ }    
+ .sizeP{
+   margin: 0px;
+   padding: 0px;
+   text-align: center;
+ }
+    @media (min-width:601px){
+      .navbarButtonClose{
+        display: none;
+      }
+.odersNameSelect{
+  font-size: 3.5vh;
+  width: 20vw;
+}      
+      .navlinkDiv{
+        text-align: center;
+        margin: 0px;
+        text-decoration: none;
+        border: whitesmoke 1px solid;
+    height: 11vh;
+    padding: 0px;
+    width: 50vw;
+    display: grid;
+    align-items: center;
+    color:whitesmoke;
+    font-weight: 900;
+
+}
+      
+      .navbarClose:active{
+        font-size: 7vh;
+        line-height: 8vh;
+        border-width: 5px;
+        
+      }
+      .navbarButtonOpen{
+        display: none;
+      }
+        .p{
+        
+        display:none;
+      }
+      .navbarButtonOpen p{
+      
+        display: none;
+      }
+    .navbarClose{
+      display: grid;
+grid-template-columns: 1fr 1fr;
+grid-template-rows: 1fr;
+justify-items: center;
+align-items: center;
+height: 11vh;
+text-decoration: none;
+position:fixed;
+top:0px;
+left:0px;
+font-size: 5vh;
+    }
+    .navbarOpen  {
+      display: grid;
+grid-template-columns: 1fr 1fr;
+grid-template-rows: 1fr;
+justify-items: center;
+align-items: center;
+height: 11vh;
+text-decoration: none;
+position: fixed;
+top: 0px;
+left: 0px;
+font-size: 5vh;
+    } 
+    .contentBody{
+display: grid;
+grid-template-columns: 1fr 1fr;
+grid-template-rows: auto;
+padding-top: 11vh;
+justify-items: center;
+width: 100vw;
+    }
+    .collectionsDiv{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin-top: 15vh;
+    justify-items: center;
+    align-items: center;
+     row-gap: 3vh;
+     margin-bottom: 5vh;
+}
+.collectionNameDiv{
+  display: grid;
+width: 40vw;
+height: 20vh;
+font-size: 2em;
+justify-items: center;
+font-weight: bold;
+color: mintcream;
+}
+.imgDiv{
+  width:30vw;
+  height: auto;
+
+}
+.imgN{
+  font-size: 4.5vh;
+}
+.toOrdersButton{display: grid;
+width: 30vw;
+height: 12vh;
+color:whitesmoke;
+font-size: 5vh;
+text-align: center;
+align-items: center;
+margin: 5vh 5vw;
+border-radius: 5px;
+border: 1px whitesmoke solid;
+}
+.ordersHeader{
+  display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    justify-items: center;
+    position: fixed;
+    background-color: blueviolet;
+    width:100%;
+    align-items:center;
+    left:0px;
+    top:11.4vh;
+    padding:1vw 0px 1vw 0px;
+    background-color:#e7e7e7;
+}
+.ordersNameDate{
+  grid-area: ordersNamedate;
+  text-align: center;
+}
+
+.ordersNameP{
+  grid-area: ordersNameP;
+  text-align: center;
+}
+.ordersNamePhoneP{
+  grid-area: ordersNamePhoneP;
+  text-align: center;
+}
+
+.orderedModelAndSizes {
+    display: grid;
+    grid-area: ordersModelAndSizes;
+    grid-template-columns: 28vw 12vw 12vw 12vw 12vw 12vw 12vw;
+    grid-template-rows: 1fr;
+    border-bottom: 1px 
+    aliceblue dotted;
+}
+.ordersModelH{
+        margin-left: 2vw;
+      }
+     
+.ordersNamediv {border-top: 2px black double;}
+.navlinkDiv{
+  background-color: blueviolet;
+}
+.modelStatus{
+  align-self: center;
+  width: 20vw;
+  height: 6vh;
+
+}
+    }
+    @media (max-width:600px) {
+      .navlinkDiv{
+        background-color: blueviolet;
+      }
+      .modelStatus{
+  align-self: center;
+  width: 20vw;
+  height: 6vh;
+
+}
+.ordersInfo{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+      .ordersModelH{
+        margin-left: 2vw;
+      }
+      .ordersNameDate{
+  grid-area: ordersNamedate;
+  text-align: center;
+  margin:1vw 0vw 1vw 0vw;
+}
+    .ordersNamediv {
+      display :flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-top: 2px rgb(83, 3, 52) double;
+      border-bottom: 1px black double;
+      }
+.ordersNamePhoneP{
+  grid-area: ordersNamePhoneP;
+  text-align: center;
+  margin: 1vw 0px 1vw 0px;
+}
+
+.orderedModelAndSizes {
+    display: grid;
+    grid-area: ordersModelAndSizes;
+    grid-template-columns: 45vw 8vw 8vw 8vw 8vw 8vw 8vw;
+    grid-template-rows: 1fr;
+    border-bottom: 1px 
+    aliceblue dotted;
+    font-size: 1em;
+}
+.ordersModelH{
+  font-size: 1em;
+  margin:2px 6vw 0px 1vw;
+  overflow: auto;
+}
+.sizesP{
+  margin: 2px 1vw 2px 1vw;
+  width: 1em;
+
+}
+.ordersNameP{
+  grid-area: ordersNameP;
+  text-align: center;
+  text-decoration: underline;
+  margin:1vw 0px 1vw 0px;
+}
+      .active{
+       background-color: thistle;
+       color: blueviolet;
+       border: darkblue 1px solid;
+       text-decoration: none;
+      
+       
+     }
+     .imgBody{
+       display:grid;
+       justify-items:center;
+     }
+     .imgDiv{
+       width:60vw;
+       height: auto;
+     }
+     .imgN{
+       font-size: 4.5vh;
+     }
+      
+     .navbarButtonClose  {  
+       display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 11vw;
+    height: 11vw;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-weight: bolder;
+    position:fixed;
+    border: 2px whitesmoke solid;
+    border-radius: 5px;
+    background-color:blueviolet;
+    top:1vh;
+    left:2vw;
+    font-weight: 900;
+    z-index: 2000;
+    
+}
+
+.navbarButtonClose p {
+                   position: relative;
+                   animation: navBarBtnRight 0.4s linear ;
+                   margin: 0px;
+                   color:whitesmoke;
+      }
+      .navbarButtonOpen p    {
+        color:whitesmoke;
+        position: relative;
+        transform:rotate(180deg);
+        animation: navBarBtnLeft 0.4s linear reverse ;
+        margin: 0px;
+      }
+ 
+.navbarButtonOpen  {  
+       display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 11vw;
+    height: 11vw;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-weight: bolder;
+    position: fixed;
+    border: 2px whitesmoke solid;
+    border-radius: 5px;
+    background-color:blueviolet;
+    top:1vh;
+    left:2vw;
+    font-weight: 900;
+    z-index: 9000;
+
+    
+}
+.navbarClose{
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    position: fixed;
+    top:0px;
+    left: 0vw;
+    width: 100vw;
+    height:100vh;
+    margin: 0px;
+    animation: navbarToleft 0.4s linear ;
+    background-color: blueviolet;
+    border: 1px blueviolet solid;
+    transform: translateX(-150vw);
+    z-index: 2000;
+    padding-top: 13vw;
+    }
+.navbarOpen{
+  display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0vh;
+    left: -150vw;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: start;
+    background-color: blueviolet;
+    margin: 0px;
+    animation:navbarToRight  0.4s linear ;
+    border: 1px blueviolet solid;
+    z-index: 2000;
+    padding-top: 13vw;
+    transform: translateX(150vw);
+}
+.navlinkDiv{
+        text-align: center;
+        margin: 0px;
+        text-decoration: none;
+        border: whitesmoke 2px solid;
+    height: 15vh;
+    padding: 0px;
+    width: 100vw;
+    display: grid;
+    align-items: center;
+    font-size: 6vh;
+    color:whitesmoke;
+    font-weight: 600;
+    overflow: hidden;
+    position: relative ;
+}
+.collectionsDiv{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin-top: 15vh;
+    justify-items: center;
+    align-items: center;
+     row-gap: 3vh;
+     margin-bottom: 5vh;
+}
+.collectionNameDiv{
+  display: grid;
+width: 80vw;
+height: 20vh;
+font-size: 2em;
+justify-items: center;
+font-weight: bold;
+color: mintcream;
+
+}
+ .toOrdersButton{display: grid;
+width: auto;
+height: 12vh;
+color:whitesmoke;
+font-size: 5vh;
+text-align: center;
+align-items: center;
+margin: 5vh 5vw;
+border: 1px whitesmoke solid;
+border-radius:5px ;
+padding: 5px;
+}
+.ordersHeader{
+  display: grid;
+  position: fixed;
+  top:0vh;
+  left:2.4vw;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    justify-items: center;
+  width: 95.5vw;
+  text-align: end;
+  
+}
+.orders{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.filterDiv,.odersNameSelect{
+   font-size: 1em;
+   width: 40vw;
+   margin-right: 0px;
+ }
+ 
+ .filterDiv{
+   padding: 0vh;
+   box-sizing: border-box;
+   display: grid;
+   grid-template-rows: 1fr;
+   grid-template-columns: 1fr 1.5fr;
+   width: 100%;
+   margin-right: 3px;
+   background-color: blueviolet;
+   padding-left: 14vw;
+ }
+ .ordersDiv{
+   margin-top: 25vh;
+ }
+}
+   .imgheader{
+         margin-bottom: 1px;
+    height: 6vh;
+}
+  
+    
+.main{
+  background-color: blueviolet;
+  min-height: 100vh;
+  overflow: auto;
+}
+.orderedModelAndSizes{
+  transition: all .9s ease-in;
+}
+
+    </style>
+    <title>KUVA</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
