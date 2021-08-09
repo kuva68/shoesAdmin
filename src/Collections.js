@@ -19,5 +19,6 @@ return <div className='collectionsDiv'>
                style={{background:`no-repeat center/cover url(${tmp})`}}>{el}</div>
         </NavLink>
     })}
-</div>}else return ''
+</div>
+ }else return ''
 }

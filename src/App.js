@@ -5,7 +5,7 @@ import * as firebase from 'firebase/app'
 import 'firebase/storage'
 import  "firebase/messaging"
 import 'firebase/auth'
-
+import { env } from '../env';
 import 'firebase/firestore'
 import HomePage from './HomePage'
 import SingIn from './SingIn'
@@ -15,14 +15,15 @@ import CollectionFoto from './CollectionFoto';
 import NavBar from './NavBar';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBS9QGlpihzZ-zLz1I6xZngQQLdRkzHs7g",
-  authDomain: "kuvashose.firebaseapp.com",
-  databaseURL: "https://kuvashose.firebaseio.com",
-  projectId: "kuvashose",
-  storageBucket: "kuvashose.appspot.com",
-  messagingSenderId: "891118479292",
-  appId: "1:891118479292:web:f901e3975d67b33d7b6db9",
-  measurementId: "G-VTHPPL8LYL"
+  apiKey: env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: env.NEXT_PUBLIC_FIREBASE_MESERMENT
+  
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
@@ -48,8 +49,6 @@ let storageRef = storage.ref()
     }
 })
 
-const A = 'kuva68@gmail.com'
-
 
 export default function App() {
   const [El,setEl] = useState('')
@@ -73,20 +72,22 @@ const topOfChanges = useSelector((state)=>{
   const dispatch = useDispatch()
   
   useEffect(()=>{
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(async function(user) {
       if (user) {
         //console.log(user)
-      dispatch({type:'user',user:user.email})
-      localStorage.setItem('user',JSON.stringify(user.email))
+        try{
+        let userDoc = await db.collection('users').doc('test').get()
+      userDoc.exists&&dispatch({type:'user',user:userDoc.data().User})
+        }
+        catch(error){console.log(error)
+        dispatch({type:'user',user:null})}
       } else {
         console.log(' No user is signed in.')
         dispatch({type:'user',user:null})
       }
     });
   })
-  let CurrentUser = firebase.auth().currentUser;
-  let userEmail = null
-  if(CurrentUser&&CurrentUser.email){userEmail = CurrentUser.email}
+  
 
 
 
@@ -96,16 +97,17 @@ const topOfChanges = useSelector((state)=>{
       try{
         let ordersSnap = await db.collection('messages').get()
         let tmpOrders = {}
-        console.log('ordersSnap',ordersSnap)
+        //console.log('ordersSnap',ordersSnap)
         ordersSnap&&ordersSnap.size>0&&ordersSnap.forEach((el)=>{
            tmpOrders[el.id] = el.data()
         })
           if(tmpOrders&&Object.keys(tmpOrders)&&Object.keys(tmpOrders).length){
             dispatch({type:'new_orders_list',orders:tmpOrders})
-          console.log('tmpOrders',tmpOrders)}
+          //console.log('tmpOrders',tmpOrders)
+        }
       }catch(error){console.log('error during getting orders',error)}}
         
-        if(User===A){getOrders()}else {return null}
+        if(User){getOrders()}else {return null}
   },[User])
 
   useEffect(()=>{
@@ -138,12 +140,12 @@ const topOfChanges = useSelector((state)=>{
      }catch(error){console.log(error)}
     }
    async function startFetching(){
-     if(User ===A){ 
+     if(User){ 
       let modelsObject = await fetchList()
       implementFetching(modelsObject)
      }}
      
-     if(window.navigator.onLine&&User===A){startFetching()}else if(User==A){
+     if(window.navigator.onLine&&User){startFetching()}else if(User){
        window.addEventListener('online',startFetching)}else {return null}
   
   },[User])
@@ -203,7 +205,7 @@ const topOfChanges = useSelector((state)=>{
       }
       }catch(error){console.log(error)}
     }
-    if(User===A){checkMessaging()}else{console.log('no user no messaging')
+    if(User){checkMessaging()}else{console.log('no user no messaging')
     return null}
   },[User])
   function changeModelStatus(el,status){
@@ -226,7 +228,7 @@ const topOfChanges = useSelector((state)=>{
                   
    }catch(error){
   console.log(error)}}
-  if(El!==''&&User===A&&Status!==''){updater()}
+  if(El!==''&&User&&Status!==''){updater()}
 },[El,Status,User]
   )
   const navBarDirect = ()=>{
@@ -252,20 +254,20 @@ collectionForChanges!==''&&topOfChanges!==''&&nameForChanges!==''&&changeStatus(
     return (
     <div className='main'>
       <div className={navbarButton}onClick={navBarDirect}>
-        <p className='p'>></p>
+        <p className='p'></p>
       </div>
       
       <NavBar/>
       
       <Switch>
         <Route exact path='/'>
-          {User===A?<HomePage/>:<Redirect to='/SingIn'/>}
+          {User?<HomePage/>:<Redirect to='/SingIn'/>}
         </Route>
         <Route path='/CollectionFoto:id'>
-          {User===A?<CollectionFoto/>:<Redirect to='/SingIn'/>}
+          {User?<CollectionFoto/>:<Redirect to='/SingIn'/>}
         </Route>
         <Route path='/Orders'>
-          {User===A?<Orders changeModelStatus={changeModelStatus}/>:<Redirect to='/SingIn'/>}
+          {User?<Orders changeModelStatus={changeModelStatus}/>:<Redirect to='/SingIn'/>}
         </Route>
         <Route path='/SingIn'component={SingIn}/>
       </Switch>
