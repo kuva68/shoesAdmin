@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import OrdersFilter from './ordersFilter'
+import OrdersFilter from '../ordersFilter'
 export default function Orders(props) {
   let orders = useSelector((state) => {
     if (state.model === 'all') {

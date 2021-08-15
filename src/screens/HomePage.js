@@ -1,6 +1,6 @@
 import React from 'react'
 import {useDispatch} from 'react-redux'
-import Collections from './Collections'
+import Collections from '../Collections'
 import {NavLink} from 'react-router-dom'
 export default function HomePage(){
    const dispatch = useDispatch()
