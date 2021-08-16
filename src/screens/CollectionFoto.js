@@ -1,7 +1,7 @@
 
     import React from 'react'
     import {useSelector} from 'react-redux'
-    import ImgComponent from '../imgComponent'
+    import ImgComponent from '../components/imgComponent'
     import {useParams} from 'react-router-dom'
     export default function CollectionFoto(props){
         let params = useParams().id.slice(1)

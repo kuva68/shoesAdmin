@@ -40,7 +40,7 @@ export const Reducer = (state = {
             let newOrders = { ...oldOrders, [action.item]: action.updatedItem }
             return { ...state, orders: newOrders }
         case 'user':
-            console.log('update user', action.user)
+            //console.log('update user', action.user)
             return { ...state, user: action.user }
         case 'END_DATE':
             return { ...state, endDate: action.endDate }
@@ -63,7 +63,7 @@ export const Reducer = (state = {
         case 'collectionsNames':
             return { ...state, collectionsNames: action.collectionsNames }
         case 'img_obj':
-            console.log('imgObg in reducer', action.obj)
+           // console.log('imgObg in reducer', action.obj)
             return { ...state, imgList: action.obj }
 
         default:

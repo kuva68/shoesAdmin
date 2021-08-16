@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import OrdersFilter from '../ordersFilter'
+import OrdersFilter from '../components/ordersFilter'
 export default function Orders(props) {
   let orders = useSelector((state) => {
     if (state.model === 'all') {
@@ -58,14 +58,16 @@ export default function Orders(props) {
     <div className='ordersDiv'>
       {orders && Object.keys(orders) && Object.keys(orders).length &&
         Object.keys(orders).length > 0 &&
-        Object.keys(orders).sort((a, b) => {
+        Object.keys(orders).filter((element)=>{
+          return orders[element].date <= start && orders[element].date >= end &&
+          clients.includes(orders[element].name)
+        }).sort((a, b) => {
           let aa = orders[a].date
           let bb = orders[b].date
           return bb - aa
         }).map((el) => {
-          if (orders[el].date <= start && orders[el].date >= end &&
-            clients.includes(orders[el].name)) {
-            return <div className='ordersNamediv' key={el} style={{
+           
+            return (<div className='ordersNamediv' key={el} style={{
               color:
                 orders[el].status === 0 ? 'red' : orders[el].status === 1 ? 'black' : 'gray',
               backgroundColor: orders[el].status === 2 ? 'red' : ''
@@ -103,8 +105,8 @@ export default function Orders(props) {
                   <option value={2}>Отклонить</option>
                 </select>
               </div>
-            </div>
-          }
+            </div>)
+          
         })}
     </div>
   </div> : <div style={{ marginTop: '11vh', textAlign: 'center' }}><OrdersFilter />

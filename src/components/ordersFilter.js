@@ -12,7 +12,7 @@ export default function OrdersFilter() {
         return state.name
     })
     const models = useSelector((state) => {
-        const set = new Set
+        const set = new Set()
         const orders = state.orders
         if (orders && Object.keys(orders) && Object.keys(orders).length) {
             for (let key in orders) {
@@ -58,37 +58,37 @@ export default function OrdersFilter() {
             }
         }
         let sortTmp = tmp.sort((a, b) => { return b - a }).map((x) => {
-            if (x) {
+            
                 let y = x % (24 * 1000 * 60 * 60)
                 let milisec = x - y
                 return milisec
-            }
+            
         })
         let dateSet = new Set(sortTmp)
         return ['all', 'month', ...dateSet]
     })
 
-    const getEndDate = (e) => {
+    const setEndDate = (e) => {
         dispatch({
             type: 'END_DATE',
             endDate: e.target.value
         })
     }
-    const getStartDate = (e) => {
+    const setStartDate = (e) => {
         dispatch({ type: 'START_DATE', startDate: e.target.value })
     }
-    const getName = (e) => {
+    const setName = (e) => {
         dispatch({
             type: 'ORDERS_NAME', name: e.target.value
         })
     }
-    const getModel = (e) => {
+    const setModel = (e) => {
         dispatch({ type: 'MODEL', model: e.target.value })
     }
     return <div className='ordersHeader'>
         <div className='filterDiv'>
             <p>KLIENT</p>
-            <select className='odersNameSelect' onChange={getName}
+            <select className='odersNameSelect' onChange={setName}
                 value={name}>
                 {klients && klients.length && klients.length > 0 && klients.map((el, i) => {
                     return <option className='odersFilterOptions'
@@ -97,19 +97,19 @@ export default function OrdersFilter() {
             </select>
         </div>
         <div className='filterDiv'><p>END DATE</p>
-            <select className='odersNameSelect' onChange={getStartDate}
+            <select className='odersNameSelect' onChange={setStartDate}
                 value={startDate}>
-                {dates && dates.length && dates.length > 0 && dates.map((el, i) => {
-                    if (el !== 'month') {
+                {dates && dates.length && dates.length > 0 && dates.filter((elem)=>{return elem !== 'month'}).map((el, i) => {
+                    
                         return <option className='odersFilterOptions'
                             key={el + i} value={el}>{el === 'all' ? el :
                                 el === 'month' ? el : new Date(el).toLocaleDateString()}</option>
-                    }
+                    
                 })}
             </select>
         </div>
         <div className='filterDiv'><p >START DATE</p>
-            <select className='odersNameSelect' onChange={getEndDate}
+            <select className='odersNameSelect' onChange={setEndDate}
                 value={endDate}>
                 {dates && dates.length && dates.length > 0 && dates.map((el, i) => {
 
@@ -121,7 +121,7 @@ export default function OrdersFilter() {
             </select>
         </div>
         <div className='filterDiv'><p >MODELS</p>
-            <select className='odersNameSelect' onChange={getModel}
+            <select className='odersNameSelect' onChange={setModel}
                 value={model}>
                 {models && models.length && models.length > 0 && models.map((el, i) => {
 

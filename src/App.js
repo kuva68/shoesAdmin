@@ -1,35 +1,22 @@
 import React from 'react';
 import { useState, useEffect } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import * as firebase from 'firebase/app'
+import firebase from './firebase/firebase'
 import 'firebase/storage'
 import "firebase/messaging"
 import 'firebase/auth'
-import { env } from '../env';
 import 'firebase/firestore'
 import HomePage from './screens/HomePage'
 import SingIn from './screens/SingIn'
 import { useSelector, useDispatch } from 'react-redux'
 import Orders from './screens/Orders';
 import CollectionFoto from './screens/CollectionFoto';
-import NavBar from './NavBar';
+import NavBar from './components/NavBar';
 
-const firebaseConfig = {
-  apiKey: env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  databaseURL: env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-  projectId: env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: env.NEXT_PUBLIC_FIREBASE_MESERMENT
+//const messaging = firebase.messaging()
 
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig)
-const messaging = firebase.messaging()
-
-messaging.usePublicVapidKey(env.PUBLIC_VAPID_KEY)
+//messaging.usePublicVapidKey(Env
+//.PUBLIC_VAPID_KEY)
 
 // Add the public key generated from the console here.
 const storage = firebase.storage()
@@ -72,25 +59,29 @@ export default function App() {
   //console.log('User',User,'A',A)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(async function (user) {
-      if (user) {
-        //console.log(user)
-        try {
-          let userDoc = await db.collection('users').doc('test').get()
-          userDoc.exists && dispatch({ type: 'user', user: userDoc?.data()?.User })
-        }
-        catch (error) {
-          console.log(error)
+  React.useEffect(() => {
+    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(async user => {
+      //console.log(user)
+        if (user) {
+          
+          try {
+            let userDoc = await db.collection('users').doc('test').get()
+            let userDocData = userDoc?.data()
+            //console.log(userDocData)
+            userDoc.exists && dispatch({ type: 'user', user: userDocData?.User })
+          }
+          catch (error) {
+            console.log(error)
+            dispatch({ type: 'user', user: null })
+          }
+        } else {
+          console.log(' No user is signed in.')
           dispatch({ type: 'user', user: null })
         }
-      } else {
-        console.log(' No user is signed in.')
-        dispatch({ type: 'user', user: null })
-      }
-    });
-  })
-
+      });
+   
+    return () => unregisterAuthObserver; // Make sure we un-register Firebase observers when the component unmounts.
+  }, []);
  useEffect(() => {
     async function getOrders() {
       //console.log('getOrders start')
@@ -108,7 +99,10 @@ export default function App() {
       } catch (error) { console.log('error during getting orders', error) }
     }
 
-    if (User) { getOrders() }
+    if (!window.navigator.onLine&&User) {window.addEventListener('online',getOrders())  }else if(User){
+        getOrders()
+    }
+    return ()=>window.removeEventListener('online',getOrders)
   }, [User])
 
   useEffect(() => {
@@ -150,70 +144,70 @@ export default function App() {
     if (window.navigator.onLine && User) { startFetching() } else if (User) {
       window.addEventListener('online', startFetching)
     }
-
+  return ()=>window.removeEventListener('online',startFetching)
   }, [User])
-  useEffect(() => {
-    async function checkMessaging() {
+ // useEffect(() => {
+   // async function checkMessaging() {
 
-      let messageToken =
-        localStorage.getItem('messageToken')
-      if (messageToken) {
-        let d = new Date()
-        try {
-          await db.collection('adminTokens').doc('Token').update({ [messageToken]: d })
+     // let messageToken =
+       // localStorage.getItem('messageToken')
+      //if (messageToken) {
+        //let d = new Date()
+        //try {
+          //await db.collection('adminTokens').doc('Token').update({ [messageToken]: d })
          // console.log('adminToken in db')
-        } catch (error) { console.log(error) }
-      }
-      if (!messageToken) {
+        //} catch (error) { console.log(error) }
+      //}
+      //if (!messageToken) {
        // console.log('startMessaging')
-        await startMessaging()
-      }
-      try {
-        messaging.onTokenRefresh(() =>
-          messaging.getToken().then((refreshedToken) => {
+        //await startMessaging()
+     // }
+      //try {
+       // messaging.onTokenRefresh(() =>
+        //  messaging.getToken().then((refreshedToken) => {
            // console.log('Token refreshed.');
-            localStorage.setItem('messageToken', refreshedToken)
+          //  localStorage.setItem('messageToken', refreshedToken)
             //console.log('token in l.storage')
-            let d = new Date();
-            db.collection('adminTokens').doc('Token').update({ [refreshedToken]: d })
+          //  let d = new Date();
+          //  db.collection('adminTokens').doc('Token').update({ [refreshedToken]: d })
             //console.log('token in db')
-          })
-            .catch((err) => {
-              console.log('Unable to retrieve refreshed token ', err);
-            })
+          //})
+           // .catch((err) => {
+           //   console.log('Unable to retrieve refreshed token ', err);
+           // })
 
-        );
-      } catch (error) { console.log(error) }
+        //);
+      //} catch (error) { console.log(error) }
       // Callback fired if Instance ID token is updated.
-    }
-    async function startMessaging() {
+    //}
+  //  async function startMessaging() {
       // Retrieve Firebase Messaging object.
-      try {
+    //  try {
         // Add the public key generated from the console here.   
-        let permission = await Notification.requestPermission()
-        if (permission === 'granted') {
-          console.log('Notification permission granted.')
-          let token = await messaging.getToken()
-          console.log('token', token)
-          if (!token || token === null) console.log('no token')
-          if (token) {
-            console.log('resieved token', token)
-            await localStorage.setItem('messageToken', token)
-            console.log('token in l.storage')
-            let d = new Date()
-            await db.collection('adminTokens').doc('Token').update({ [token]: d })
-            console.log('token in db')
-          } else {
-            console.log('Unable to get permission to notify.')
-          }
-        }
-      } catch (error) { console.log(error) }
-    }
-    if (User) { checkMessaging() } else {
-      console.log('no user no messaging')
-      return null
-    }
-  }, [User])
+      //  let permission = await Notification.requestPermission()
+      //  if (permission === 'granted') {
+        //  console.log('Notification permission granted.')
+        //  let token = await messaging.getToken()
+        //  console.log('token', token)
+        //  if (!token || token === null) console.log('no token')
+        //  if (token) {
+          //  console.log('resieved token', token)
+        //    await localStorage.setItem('messageToken', token)
+        //    console.log('token in l.storage')
+         //   let d = new Date()
+         //   await db.collection('adminTokens').doc('Token').update({ [token]: d })
+       //     console.log('token in db')
+       //   } else {
+       //     console.log('Unable to get permission to notify.')
+         // }
+       // }
+    //  } catch (error) { console.log(error) }
+   // }
+  //  if (User) { checkMessaging() } else {
+    //  console.log('no user no messaging')
+   //   return null
+   // }
+ // }, [User])
   function changeModelStatus(el, status) {
     setEl(el)
     setStatus(status)

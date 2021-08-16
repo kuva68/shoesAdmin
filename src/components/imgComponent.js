@@ -11,31 +11,24 @@ import {useDispatch} from 'react-redux'
 
   let imgRef = useRef(null)
   useEffect(()=>{
-      
-      if(!window.navigator.onLine){
-    window.addEventListener('online',()=>topRef())
-  }else{topRef()}
- 
-}  ,[])
-
-  function topRef(){   
+    function topRef(){   
        
-     let target = imgRef.current
-     if(target&&target.getBoundingClientRect().top>-800&&target.getBoundingClientRect().top<1000
-     && imgSrc !== props.option.url){
-        setImgSrc(props.option.url)
- }else if(imgSrc !== props.option.url){
-     window.addEventListener('scroll',()=>{
-             if(target.getBoundingClientRect().top>-800&&target
-             .getBoundingClientRect().top<2000){
-                setImgSrc(props.option.url)
-    }})
-}}
+      let target = imgRef.current
+      if(target&&target.getBoundingClientRect().top>-800&&target.getBoundingClientRect().top<1000
+      && imgSrc !== props.option.url){
+         setImgSrc(props.option.url)
+  }else if(imgSrc !== props.option.url){
+      window.addEventListener('scroll',()=>{
+              if(target.getBoundingClientRect().top>-800&&target
+              .getBoundingClientRect().top<2000){
+                 setImgSrc(props.option.url)
+     }})
+ }}
+      topRef()
+ 
+}  ,[imgSrc,props.option.url])
 
-     
-    
-
-    
+ 
     return (<div className='imgBody' ref = {imgRef}>
         
             <div className='imgheader'>

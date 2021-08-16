@@ -1,13 +1,9 @@
-import * as firebase from "firebase/app"
+import  firebase from '../firebase/firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import React from 'react'
-import {useEffect} from 'react'
-import {useDispatch,useSelector} from 'react-redux'
+
 export default function SingIn(){
-  const dispatch = useDispatch()
-  const User = useSelector((state)=>{
-    return state.user})
-var uiConfig = {
+  var uiConfig = {
     singInFlow:"popup",
     signInSuccessUrl: '/HomePage',
     signInOptions: [
@@ -30,29 +26,7 @@ var uiConfig = {
       //window.location.assign('<your-privacy-policy-url>');
     }
   
-  let sIn,displayName,email,emailVerified,photoURL,uid,phoneNumber,providerData
-  useEffect(()=>{
-   function getUser(){ firebase.auth().onAuthStateChanged(function(user) {
-      if (user&&user!==User) {
-        // User is signed in.
-         displayName = user.displayName;
-         email = user.email;
-         emailVerified = user.emailVerified;
-         photoURL = user.photoURL;
-         uid = user.uid;
-         phoneNumber = user.phoneNumber;
-         providerData = user.providerData;
-         dispatch({type:'user',user:email})
- // user.getIdToken().then(function(accessToken) {
-   //   sIn = JSON.stringify(accessToken)
-     // localStorage.setItem("user",user.displayName)
-     // dispatch({type:'user',user:user.displayName})
-  //})
-    }})
-  }
-  getUser()
-  },[User]
-  )
+  
      
    
 return <div style={{marginTop:'11vh',textAlign:'center'}}>
