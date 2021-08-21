@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import OrdersFilter from '../components/ordersFilter'
+import {Table,Form} from 'react-bootstrap'
 export default function Orders(props) {
   let orders = useSelector((state) => {
     if (state.model === 'all') {
@@ -53,9 +54,18 @@ export default function Orders(props) {
   })
   //const dispatch = useDispatch()
 
-  return start && end && clients && orders ? <div className='orders'>
-    <OrdersFilter />
-    <div className='ordersDiv'>
+  return start && end && clients && orders ? <>
+  <OrdersFilter />
+  <tr className='px-1 position-fixed px-1 bg-info text-center' style={{fontSize:'0.8rem',top:'7rem'}}>
+     <th className='m-0 p-0'style={{width:'4rem'}}>Date </th>  
+     <th className='m-0 p-0'style={{width:'18rem'}}>Name </th>
+     <th className='m-0 p-0'style={{width:'7rem'}}>Phone</th>
+     <th className='m-0 p-0'style={{width:'18rem'}}>Model</th>
+     <th className='m-0 p-0'style={{width:'20rem'}}>Sizes</th>
+     <th className='m-0 p-0'style={{width:'10rem'}}>Status</th>
+    </tr >
+  <Table striped bordered hover className='text-center' >
+    
       {orders && Object.keys(orders) && Object.keys(orders).length &&
         Object.keys(orders).length > 0 &&
         Object.keys(orders).filter((element)=>{
@@ -67,48 +77,50 @@ export default function Orders(props) {
           return bb - aa
         }).map((el) => {
            
-            return (<div className='ordersNamediv' key={el} style={{
-              color:
-                orders[el].status === 0 ? 'red' : orders[el].status === 1 ? 'black' : 'gray',
-              backgroundColor: orders[el].status === 2 ? 'red' : ''
-            }}>
-              <div className='ordersInfo'>
-                <p className='ordersNameDate'>{new Date(orders[el].date).toLocaleDateString()}</p>
-                <h3 className='ordersNameP'>{orders[el].name}</h3>
-                <p className='ordersNamePhoneP'>{orders[el].phone}</p>
-              </div>
-              <div className='ordersSizes'>
-                {orders[el].bucket && Object.keys(orders[el].bucket) &&
+            return (<>
+           
+                 {orders[el].bucket && Object.keys(orders[el].bucket) &&
                   Object.keys(orders[el].bucket).length &&
                   Object.keys(orders[el].bucket).map((elm, i) => {
-                    return <div className='orderedModelAndSizes' key={elm + i}>
-                      <p className='ordersModelH'>{elm}</p>
-                      {orders[el].bucket[elm].sizes &&
+
+                    return <tr className='px-1' key={elm + i}style={{fontSize:'0.8rem',
+                            color:orders[el].status === 0 ? 'red' : orders[el].status === 1 ? 'black' : '#e5e5e5'}}>
+                    <th className='m-0 p-0'style={{width:'4rem'}}> {new Date(orders[el].date).toLocaleDateString()}</th>  
+                    <th className='m-0 p-0 text-wrap overflow-hidden'style={{width:'18rem'}}> {orders[el].name}</th>
+                    <th className='m-0 p-0'style={{width:'7rem'}}>{orders[el].phone}</th>
+                    <th className='m-0 p-0 text-wrap overflow-auto'style={{width:'18rem'}}>{elm}</th>
+                    <th className='m-0 p-0'style={{width:'20rem'}}>
+                      <div className='d-flex flex-row w-100 justify-content-between'>
+                        {orders[el].bucket[elm].sizes &&
                         Object.keys(orders[el].bucket[elm].sizes) &&
                         Object.keys(orders[el].bucket[elm].sizes).map((s, i) => {
-                          return <div key={s + i * 3} style={{
-                            display: 'flex', flexDirection: 'column',
-                            margin: 0, padding: 0, width: '3vw', textAlign: 'center'
-                          }}>
+                          return <div key={s + i * 3}classname='d-flex flex-cloumn justify-content-center align-items-center mx-1'>
                             <p className='sizesP' style={{ textDecoration: 'underline', margin: 0 }} >{s}</p>
                             <p className='sizesP' style={{ backgroundColor: orders[el].bucket[elm].sizes[s] === 0 ? '' : '#e7e7e7' }}>
                               {orders[el].bucket[elm].sizes[s] === 0 ? '_' : orders[el].bucket[elm].sizes[s]}</p>
                           </div>
                         })}
-                    </div>
-                  })}</div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <select value={orders[el].status} className='modelStatus'
-                  onChange={(e) => { props.changeModelStatus(el, +e.target.value) }}>
-                  <option value={0}>Не обработан</option>
-                  <option value={1}>Принят</option>
-                  <option value={2}>Отклонить</option>
-                </select>
-              </div>
-            </div>)
+                      </div>
+                    
+                    </th>
+                    <th className='m-0 p-0'style={{width:'10rem'}}>
+                     <Form.Select value={orders[el].status} style={{fontSize:'0.8rem'}}
+                      onChange={(e) => { props.changeModelStatus(el, +e.target.value) }}>
+                      <option value={0}>Не обработан</option>
+                      <option value={1}>Принят</option>
+                      <option value={2}>Отклонить</option>
+                     </Form.Select>
+                    </th>
+                   </tr >
+                    
+                  })}
+             
+          
+            </>
+           )
           
         })}
-    </div>
-  </div> : <div style={{ marginTop: '11vh', textAlign: 'center' }}><OrdersFilter />
+   
+  </Table></> : <div style={{ marginTop: '11vh', textAlign: 'center' }}><OrdersFilter />
     <p> NO ORDERS</p></div>
 }

@@ -11,8 +11,8 @@ import SingIn from './screens/SingIn'
 import { useSelector, useDispatch } from 'react-redux'
 import Orders from './screens/Orders';
 import CollectionFoto from './screens/CollectionFoto';
-import NavBar from './components/NavBar';
-
+import { NavLink } from 'react-router-dom';
+import {Container,Row,Col,Dropdown,Image} from 'react-bootstrap'
 //const messaging = firebase.messaging()
 
 //messaging.usePublicVapidKey(Env
@@ -40,6 +40,7 @@ db.enablePersistence()
 export default function App() {
   const [El, setEl] = useState('')
   const [Status, setStatus] = useState('')
+  const [imgHref,setImgHref] = useState('')
   const collectionForChanges = useSelector((state) => {
     return state.collectionForChanges
   })
@@ -50,9 +51,7 @@ export default function App() {
   const topOfChanges = useSelector((state) => {
     return state.topOfChanges
   })
-  const navbarButton = useSelector((state) => {
-    return state.navbarButton
-  })
+  
   const User = useSelector((state) => {
     return state.user
   })
@@ -63,7 +62,8 @@ export default function App() {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(async user => {
       //console.log(user)
         if (user) {
-          
+          setImgHref(user?.photoURL)
+          console.log(user,'===user')
           try {
             let userDoc = await db.collection('users').doc('test').get()
             let userDocData = userDoc?.data()
@@ -80,7 +80,7 @@ export default function App() {
         }
       });
    
-    return () => unregisterAuthObserver; // Make sure we un-register Firebase observers when the component unmounts.
+    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
  useEffect(() => {
     async function getOrders() {
@@ -234,10 +234,7 @@ export default function App() {
     if (El !== '' && User && Status !== '') { updater() }
   }, [El, Status, User]
   )
-  const navBarDirect = () => {
-    return dispatch({ type: 'change_class_name' })
-
-  }
+  
   useEffect(() => {
     async function changeStatus() {
       try {
@@ -255,15 +252,46 @@ export default function App() {
     collectionForChanges !== '' && topOfChanges !== '' && nameForChanges !== '' && changeStatus()
   }, [topOfChanges, nameForChanges, collectionForChanges])
 
+  const asideMenu = [{name:'Home',href:'/'},{name:'Orders',href:'/Orders'}]
+
   return (
-    <div className='main'>
-      <div className={navbarButton} onClick={navBarDirect}>
-        <p className='p'></p>
-      </div>
+  <Container fluid>
+<Row style={{height:'3rem'}}className='bg-info text-white d-flex align-items-center fixed-top px-5'>
+  <Col>
+ {User && <Dropdown>
+<Dropdown.Toggle variant="light" id="dropdown-basic"className='px-4'>
+MENU
+</Dropdown.Toggle>
 
-      <NavBar />
+<Dropdown.Menu>
+{asideMenu.map((el,i)=>{
+       return(
+         
+      <Dropdown.Item action variant='light'key={i+''}>
+        <NavLink to={el.href}>
+          <h5>
+              {el.name}
+          </h5>
+        </NavLink>
+          
+      </Dropdown.Item>
+   
+  )
+})}
 
-      <Switch>
+</Dropdown.Menu>
+</Dropdown>}
+  </Col>
+<Col className="d-flex justify-content-end pl-10 ">
+{ User&&<Image src={imgHref} roundedCircle style={{width:'2.5rem',height:'auto',alignSelf:'flex-end'}}/>}
+</Col>
+
+</Row>
+{User && <Row style={{height:'3rem'}}className='bg-info text-white d-flex align-items-center '>
+  
+  </Row>}
+<Row >
+<Switch>
         <Route exact path='/'>
           {User ? <HomePage /> : <Redirect to='/SingIn' />}
         </Route>
@@ -273,10 +301,15 @@ export default function App() {
         <Route path='/Orders'>
           {User ? <Orders changeModelStatus={changeModelStatus} /> : <Redirect to='/SingIn' />}
         </Route>
-        <Route path='/SingIn' component={SingIn} />
-      </Switch>
+        <Route path='/SingIn' >
+          {User?<Redirect to='/'/>:<SingIn/>}
+          </Route>
+      </Switch> 
+                
+    
+</Row>
 
-    </div>
-  )
-}
+</Container>
+
+  )}
 
